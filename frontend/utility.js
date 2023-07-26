@@ -23,7 +23,6 @@ export function drawBoard(ctx, height, width, boardSize, blockSize, borderW, ima
     let countLR = 100;
     let countRL = 81;
     let flag = 0;
-	let fill=true;
     for (let r = 0; r < boardSize; r++) {
         for (let c = 0; c < boardSize; c++) {
             ctx.fillStyle = '#0D0D37';
@@ -33,9 +32,10 @@ export function drawBoard(ctx, height, width, boardSize, blockSize, borderW, ima
             const rectHeight = blockSize - borderW * 2;
 
             ctx.fillRect(x, y, rectWidth, rectHeight);
-			if(countLR%10==0 && fill ){
+			//adding wormhole
+			let mapVal = map[r][c];
+			if(warArr.includes(mapVal)){
 				ctx.drawImage(image,x,y,rectHeight,rectHeight);
-				fill=false;
 			}
             let val;
             if (flag % 2 == 0) {
