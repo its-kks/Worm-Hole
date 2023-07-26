@@ -3,7 +3,7 @@ const app = express();
 const http = require("http").createServer(app);
 const { v4: uuidv4 } = require('uuid');
 const COLORS=['red','blue','green','magenta'];
-const {numToCoordinates} = require('./utility.js');
+const {numToCoordinates,randomArr} = require('./utility.js');
 let io = require('socket.io')(http, {
     cors: {
       origin: "*",
@@ -68,7 +68,15 @@ io.on('connection',(socket)=>{
         // the communication in that room.
         socket.join(roomName);
         socket.number = 1;
-        io.sockets.in(roomName).emit('addGameCode',roomName);
+
+        //generate position of wormholes
+        let from=randomArr(6,[]);
+        let to=randomArr(6,from);
+
+        state[roomName].from=from;
+        state[roomName].to=to;
+
+        socket.emit('addGameCodeAndGenerateBoard',roomName,from);
         io.sockets.in(roomName).emit('setGoti',state[roomName]);
     }
     function handleJoinGame(roomName){
@@ -91,7 +99,7 @@ io.on('connection',(socket)=>{
             gameState.noPlayers+=1;
             socket.number = gameState.noPlayers;
             io.sockets.in(roomName).emit('setGoti',state[roomName]);
-            socket.emit('addGameCode',roomName);
+            socket.emit('addGameCodeAndGenerateBoard',roomName,gameState.from);
             socket.emit('addPlayerHeading',gameState.noPlayers);
 
             //if no of players are 4 start game automatically

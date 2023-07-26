@@ -1,5 +1,6 @@
 module.exports ={
-    numToCoordinates
+    numToCoordinates,
+    randomArr
 }
 function numToCoordinates(n,blockSize,IN_X,IN_Y){
     
@@ -16,4 +17,16 @@ function numToCoordinates(n,blockSize,IN_X,IN_Y){
     }
     coordinates.push(IN_Y-tens*blockSize);
     return coordinates;
+}
+
+function randomArr(n,arr){
+    let newArr = [];
+    while(newArr.length!=n){
+        let ranNumber = Math.floor(Math.random() * (98 - 10 + 1)) + 10;
+        if(arr.includes(ranNumber)){
+            continue;
+        }
+        newArr.push(ranNumber);
+    }
+    return newArr;
 }

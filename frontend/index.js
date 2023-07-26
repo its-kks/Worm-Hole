@@ -8,22 +8,11 @@ canvas.height = height;
 const blockSize = canvas.width / boardSize;
 const borderW = 1;
 import { drawBoard, createDice, randomizeDice } from './utility.js';
-const img = new Image();
-img.crossOrigin = 'anonymous'; // Set this if needed for CORS handling
-
-// Set the onload event handler for the image
-img.onload = function () {
-  // Now that the image is loaded, draw the board with the image
-  drawBoard(ctx, height, width, boardSize, blockSize, borderW, img);
-};
-
-// Set the source of the image after setting the onload event handler
-img.src = 'wormhole.png';
 
 //making client instance
 const socket = io('http://localhost:3000');
 socket.on('updateGoti',moveGoti);
-socket.on('addGameCode',addGameCode);
+socket.on('addGameCodeAndGenerateBoard',generateBackground);
 socket.on('setGoti',setGoti);
 socket.on('addPlayerHeading',(no)=>{
     document.querySelector('#playerHeading').innerText = `Player ${no}`;
@@ -42,7 +31,6 @@ socket.on('updateTurn', (turn) => {
 socket.on('winnerFound',declareWinner)
 
 
-drawBoard(ctx,height,width,boardSize,blockSize,borderW,img);
 
 
 const diceContainer = document.querySelector(".diceContainer");
@@ -107,10 +95,14 @@ newGameBtn.addEventListener('click',()=>{
     socket.emit('newGame');
 })
 
-function addGameCode(code){
+function generateBackground(code,arr){
+    const img = new Image();
+    img.onload = function () {
+        drawBoard(ctx, height, width, boardSize, blockSize, borderW, img, arr);
+    };
+    img.src = 'wormhole.png';
     const label=document.querySelector('#codeLabel');
     label.innerText=label.innerText+" "+code;
-
 }
 function setGoti(object){
     //to prevent invalid code from entering
