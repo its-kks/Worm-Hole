@@ -20,7 +20,7 @@ function generateCustomUUID(size) {
 const clientRooms = {};//store which client belongs to which room
 const state={};//stores gameState of each room
 
-const NO_WORM=8;
+const NO_WORM=15;
 const IN_X=5;
 const IN_Y=640;
 function generateState(){
@@ -72,10 +72,8 @@ io.on('connection',(socket)=>{
 
         //generate position of wormholes
         let from=randomArr(NO_WORM,[]);
-        let to=randomArr(NO_WORM,from);
 
         state[roomName].from=from;
-        state[roomName].to=to;
 
         socket.emit('addGameCodeAndGenerateBoard',roomName,from);
         io.sockets.in(roomName).emit('setGoti',state[roomName]);
@@ -145,7 +143,6 @@ async function gotiCoordinates(dice, id, blockSize) {
         const oldPos = state[clientRooms[id][0]].players[playerNo - 1].pos;
         let newPos = dice + state[clientRooms[id][0]].players[playerNo - 1].pos;
         const from = state[clientRooms[id][0]].from;
-        const to = state[clientRooms[id][0]].to;
         // Check for out of bounds
         if(newPos>100){
             setNextTurn(id);
@@ -174,7 +171,7 @@ async function gotiCoordinates(dice, id, blockSize) {
             io.sockets.in(clientRooms[id]).emit('makeSmall',playerNo);
             await new Promise(resolve => setTimeout(resolve, 1200));
 
-            newPos=to[Math.floor(Math.random()*NO_WORM)];
+            newPos=from[Math.floor(Math.random()*NO_WORM)];
             let arr = numToCoordinates(newPos, blockSize,inX,inY);
             state[clientRooms[id][0]].players[playerNo - 1].pos = newPos;
             io.sockets.in(clientRooms[id]).emit('updateGoti', arr[0], arr[1], playerNo);

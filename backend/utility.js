@@ -19,11 +19,11 @@ function numToCoordinates(n,blockSize,IN_X,IN_Y){
     return coordinates;
 }
 
-function randomArr(n,arr){
+function randomArr(n){
     let newArr = [];
     while(newArr.length!=n){
         let ranNumber = Math.floor(Math.random() * (98 - 10 + 1)) + 10;
-        if(arr.includes(ranNumber) || newArr.includes(ranNumber)){
+        if(newArr.includes(ranNumber)){
             continue;
         }
         newArr.push(ranNumber);

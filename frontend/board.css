@@ -76,6 +76,7 @@ canvas#board {
 }
 .control{
     height: 300px;
+    flex-direction: column;
 }
 .diceContainer {
 	display: flex;
@@ -147,3 +148,20 @@ canvas#board {
       display: block;
     }
 }
+/* @media (max-width:970px){
+    .canvasContainer{
+        transform: scale(0.5);
+    }
+    .diceContainer{
+        transform: scale(0.5);
+    }
+    #gameScreen{
+        flex-direction: column;
+        align-items: start;
+        justify-content:start;
+    }
+    .control{
+        flex-direction: row;
+    }
+} */
+  
