@@ -1,5 +1,5 @@
 export function drawBoard(ctx, height, width, boardSize, blockSize, borderW) {
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, width, height);
 
     ctx.font = '12px Arial';
@@ -27,6 +27,7 @@ export function drawBoard(ctx, height, width, boardSize, blockSize, borderW) {
             } else {
                 val = countRL++;
             }
+			ctx.fillStyle="red";
             ctx.fillText(val, x + rectWidth - 5, y + 5);
         }
         if (flag % 2 == 0) {

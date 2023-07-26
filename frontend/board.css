@@ -1,11 +1,43 @@
 body{
     display: flex;
     align-items:center;
-    justify-content:space-evenly;
+    justify-content:center;
+    height:100vh;
+    background-image: url(https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+    color:white;
+    background-size: contain;
+}
+.gameDisplay{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+#initialScreen{
+    height:100vh;
+    width:400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+#gameScreen{
+    display: none;
+}
+#newGameButton{
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+#gameCodeInput{
+    margin-bottom: 10px;
 }
 #board{
-    margin:5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    margin:4px;
+    box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.5);
+    border: 3px solid white;
+    border-radius: 8px;
+}
+hr {
+    border-color:2px solid white;
 }
 .canvasContainer {
     position: relative;
@@ -25,16 +57,17 @@ canvas#board {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(0, 0, 0, 0.5); */
 }
 .goti{
-    height: 50px;
-    width: 50px;
+    height: 45px;
+    width: 45px;
     border-radius: 50%;
     position: absolute;
     transform:translate(5px, 680px);
-    /* display: none; */
+    border: 1px solid white;
     background-color: blueviolet;
+    display: none;
 }
 .control{
     height: 300px;
@@ -49,7 +82,9 @@ canvas#board {
 	position: relative;
 	margin: 5px;
 	border-radius: 20px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    background-color: white;
+    border: 2px solid black;
 }
 
 .diceDot {
@@ -66,4 +101,8 @@ canvas#board {
 	top: var(--top);
 	left: var(--left);
 	transform: translateX(calc(var(--left) * -1)) translateY(calc(var(--top) * -1));
+}
+#gameLabel{
+    margin-top: 3px;
+    font-weight: 600;
 }
