@@ -111,3 +111,39 @@ canvas#board {
     margin-top: 3px;
     font-weight: 600;
 }
+.animatedSmall {
+    animation-name: shrink;
+    animation-duration: 1s;
+    animation-fill-mode: forwards; 
+}
+  
+@keyframes shrink {
+    from {
+      width: 42px;
+      height: 42px;
+      display: block;
+    }to {
+      width: 0px; 
+      height: 0px; 
+      display: none;
+    }
+}
+
+.animatedLarge {
+    animation-name: grow;
+    animation-duration: 1s;
+    animation-fill-mode: forwards; 
+}
+  
+@keyframes grow {
+    from {
+      width: 0px; 
+      height: 0px; 
+      display: none;
+    }
+    to {
+      width: 42px; 
+      height: 42px; 
+      display: block;
+    }
+}

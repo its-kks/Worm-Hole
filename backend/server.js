@@ -6,8 +6,8 @@ const COLORS=['red','blue','green','magenta'];
 const {numToCoordinates,randomArr} = require('./utility.js');
 let io = require('socket.io')(http, {
     cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
+        origin: "*",
+        methods: ["GET", "POST"]
     }
 });
 
@@ -20,6 +20,7 @@ function generateCustomUUID(size) {
 const clientRooms = {};//store which client belongs to which room
 const state={};//stores gameState of each room
 
+const NO_WORM=8;
 const IN_X=5;
 const IN_Y=640;
 function generateState(){
@@ -70,8 +71,8 @@ io.on('connection',(socket)=>{
         socket.number = 1;
 
         //generate position of wormholes
-        let from=randomArr(6,[]);
-        let to=randomArr(6,from);
+        let from=randomArr(NO_WORM,[]);
+        let to=randomArr(NO_WORM,from);
 
         state[roomName].from=from;
         state[roomName].to=to;
@@ -132,9 +133,11 @@ async function gotiCoordinates(dice, id, blockSize) {
     const playerNo = clientRooms[id][1];
     if(playerNo===state[clientRooms[id][0]].currentTurn){
         const clientArr = clientRooms[id];
+        let delay=30;//delay to move from one position to another in ms
         const oldPos = state[clientRooms[id][0]].players[playerNo - 1].pos;
-        //dice removed
-        const newPos = dice + state[clientRooms[id][0]].players[playerNo - 1].pos;
+        let newPos = dice + state[clientRooms[id][0]].players[playerNo - 1].pos;
+        const from = state[clientRooms[id][0]].from;
+        const to = state[clientRooms[id][0]].to;
         // Check for out of bounds
         if(newPos>100){
             return;
@@ -149,13 +152,25 @@ async function gotiCoordinates(dice, id, blockSize) {
             
             // Introduce a delay only for the last iteration of the loop
             if (p < newPos) {
-                await new Promise(resolve => setTimeout(resolve, 300)); // 300 milliseconds (0.3 seconds) delay
+                await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
         // Check for winner 
         if(newPos==100){
             io.sockets.in(clientRooms[id]).emit('winnerFound',playerNo,id);
             return;
+        }
+        //check for wormholes
+        if(from.includes(newPos)){
+            io.sockets.in(clientRooms[id]).emit('makeSmall',playerNo);
+            await new Promise(resolve => setTimeout(resolve, 1200));
+
+            newPos=to[Math.floor(Math.random()*NO_WORM)];
+            let arr = numToCoordinates(newPos, blockSize,inX,inY);
+            state[clientRooms[id][0]].players[playerNo - 1].pos = newPos;
+            io.sockets.in(clientRooms[id]).emit('updateGoti', arr[0], arr[1], playerNo);
+
+            io.sockets.in(clientRooms[id]).emit('regrow',playerNo);
         }
         // setting turn of next player
         let noOfPlay=state[clientRooms[id][0]].noPlayers;

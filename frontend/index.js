@@ -29,7 +29,16 @@ socket.on('updateTurn', (turn) => {
     label.innerHTML = `<b>Turn: Player ${turn}</b>`;
 });
 socket.on('winnerFound',declareWinner)
-
+socket.on('makeSmall',(n)=>{
+    const goti = document.querySelector(`.overlay div:nth-child(${n})`);
+    goti.classList.add('animatedSmall');
+    goti.classList.remove('animatedLarge');
+})
+socket.on('regrow',(n)=>{
+    const goti = document.querySelector(`.overlay div:nth-child(${n})`);
+    goti.classList.add('animatedLarge');
+    goti.classList.remove('animatedSmall');
+})
 
 
 
