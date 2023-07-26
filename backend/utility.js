@@ -23,7 +23,7 @@ function randomArr(n,arr){
     let newArr = [];
     while(newArr.length!=n){
         let ranNumber = Math.floor(Math.random() * (98 - 10 + 1)) + 10;
-        if(arr.includes(ranNumber)){
+        if(arr.includes(ranNumber) || newArr.includes(ranNumber)){
             continue;
         }
         newArr.push(ranNumber);
