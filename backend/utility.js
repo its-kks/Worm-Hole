@@ -1,14 +1,13 @@
 module.exports ={
     numToCoordinates
 }
-function numToCoordinates(n,blockSize){
-    const IN_X=5;
-    const IN_Y=680;
+function numToCoordinates(n,blockSize,IN_X,IN_Y){
+    
     let tens=Math.floor((n-1)/10);
     let ones=(n)%10
     let coordinates=[];
     if(tens%2==0){
-        let mul=(ones-1)>0?(ones-1):9;
+        let mul=(ones-1)>=0?(ones-1):9;
         coordinates.push(IN_X+mul*blockSize);
     }
     else{

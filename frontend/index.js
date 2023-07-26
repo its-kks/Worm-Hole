@@ -7,6 +7,7 @@ canvas.width = width;
 canvas.height = height;
 const blockSize = canvas.width / boardSize;
 const borderW = 1;
+// const separation = []
 import { drawBoard, createDice, randomizeDice } from './utility.js';
 
 //making client instance
@@ -14,33 +15,68 @@ const socket = io('http://localhost:3000');
 socket.on('updateGoti',moveGoti);
 socket.on('addGameCode',addGameCode);
 socket.on('setGoti',setGoti);
+socket.on('addPlayerHeading',(no)=>{
+    document.querySelector('#playerHeading').innerText = `Player ${no}`;
+})
 socket.on('gameIsFull',()=>{
     alert("Sorry this game has began!!!")
 })
 socket.on('invalidCode',()=>{
     alert("Sorry invalid code!!!")
 })
+socket.on('removeStartBtn',removeStart)
+socket.on('updateTurn', (turn) => {
+    const label = document.querySelector("#turnLabel");
+    label.innerHTML = `<b>Turn: Player ${turn}</b>`;
+});
+
 
 drawBoard(ctx,height,width,boardSize,blockSize,borderW);
 
 const diceContainer = document.querySelector(".diceContainer");
 const btnRollDice = document.querySelector(".rollDiceBtn");
-
+const btnStart = document.querySelector(".startBtn");
+let gameStarted = false;
 
 randomizeDice(diceContainer);
 
 
 btnRollDice.addEventListener("click", () => {
-    let diceValue = -1;
-	const interval = setInterval(() => {
-		diceValue = randomizeDice(diceContainer);
-	}, 50);
-	setTimeout(() => {clearInterval(interval)
-        //sending data to server
-        socket.emit('diceRolled',diceValue,socket.id,blockSize);
-        console.log("Returning Dice Value");//actually here we are passing parameters of the function
-    console.log(diceValue)}, 1000);
+    if(gameStarted){
+        let diceValue = -1;
+	    const interval = setInterval(() => {
+	    	diceValue = randomizeDice(diceContainer);
+	    }, 50);
+	    setTimeout(() => {clearInterval(interval)
+            //sending data to server
+            socket.emit('diceRolled',diceValue,socket.id,blockSize);
+            console.log("Returning Dice Value");//actually here we are passing parameters of the function
+        console.log(diceValue)}, 1000);
+    }
 });
+
+//start game for all
+btnStart.addEventListener("click",()=>{
+    if(!gameStarted)
+    {
+        socket.emit('closeEntry');
+        gameStarted=true;
+    }
+    
+})
+
+//remove start
+function removeStart(){
+    gameStarted=true;
+        //close entry
+    btnRollDice.classList.remove('btn-secondary')
+    btnRollDice.classList.add('btn-primary');
+    btnStart.remove();
+    const turnLabel = document.createElement('dive');
+    turnLabel.id = 'turnLabel';
+    turnLabel.innerHTML = '<b>Turn: Player 1</b>';
+    btnRollDice.insertAdjacentElement('afterend',turnLabel);
+}
 
 //Moving Goti
 function moveGoti(x,y,n){
@@ -74,6 +110,7 @@ function setGoti(object){
         goti.style.backgroundColor=object.players[i].color;
         goti.style.display='block';
     }
+
 }
 //joining game
 const joinBtn=document.querySelector('#joinGameButton');

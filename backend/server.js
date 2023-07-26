@@ -4,7 +4,6 @@ const http = require("http").createServer(app);
 const { v4: uuidv4 } = require('uuid');
 const COLORS=['red','blue','green','magenta'];
 const {numToCoordinates} = require('./utility.js');
-
 let io = require('socket.io')(http, {
     cors: {
       origin: "*",
@@ -34,7 +33,8 @@ function generateState(){
                 color:COLORS[0]
             },
         ],
-        gameStarted:false
+        gameStarted:false,
+        currentTurn:1
     }
     return gameState;
 }
@@ -43,7 +43,8 @@ io.on('connection',(socket)=>{
     console.log("New connection");
     socket.on('diceRolled',gotiCoordinates);
     socket.on('newGame',handleNewGame);
-    socket.on('joinGame',handleJoinGame)
+    socket.on('joinGame',handleJoinGame);
+    socket.on('closeEntry',handleCloseEntry);
     function handleNewGame(){
         let roomName = generateCustomUUID(7);
         socket.emit('handleGameCode',roomName);
@@ -71,7 +72,6 @@ io.on('connection',(socket)=>{
         io.sockets.in(roomName).emit('setGoti',state[roomName]);
     }
     function handleJoinGame(roomName){
-        console.log("Adding new player");
         if(state[roomName]===undefined){
             socket.emit('invalidCode');
         }
@@ -83,7 +83,7 @@ io.on('connection',(socket)=>{
             clientRooms[socket.id]=[roomName,gameState.noPlayers+1];
             socket.join(roomName);
             gameState.players.push({
-                x:IN_X, 
+                x:IN_X+gameState.noPlayers*5, 
                 y:IN_Y,
                 pos:1,
                 color:COLORS[gameState.noPlayers]
@@ -92,7 +92,21 @@ io.on('connection',(socket)=>{
             socket.number = gameState.noPlayers;
             io.sockets.in(roomName).emit('setGoti',state[roomName]);
             socket.emit('addGameCode',roomName);
+            socket.emit('addPlayerHeading',gameState.noPlayers);
+
+            //if no of players are 4 start game automatically
+            if(gameState.noPlayers===4){
+                handleCloseEntry();
+                gameState.gameStarted = true;
+            }
         }
+    }
+    function handleCloseEntry(){
+        //set game to start
+        roomName=clientRooms[socket.id][0];
+        let gameState=state[roomName];
+        gameState.gameStarted = true;
+        io.sockets.in(roomName).emit('removeStartBtn');
     }
 })
 
@@ -108,21 +122,31 @@ try {
 async function gotiCoordinates(dice, id, blockSize) {
     // Find player no
     const playerNo = clientRooms[id][1];
-    const clientArr = clientRooms[id];
-    const oldPos = state[clientRooms[id][0]].players[playerNo - 1].pos;
-    const newPos = dice + state[clientRooms[id][0]].players[playerNo - 1].pos;
-    // Check for winner 
-    // Check for out of bounds
-    state[clientRooms[id][0]].players[playerNo - 1].pos = newPos;
+    if(playerNo===state[clientRooms[id][0]].currentTurn){
+        const clientArr = clientRooms[id];
+        const oldPos = state[clientRooms[id][0]].players[playerNo - 1].pos;
+        //dice removed
+        const newPos = 7 + state[clientRooms[id][0]].players[playerNo - 1].pos;
+        // Check for winner 
+        // Check for out of bounds
+        state[clientRooms[id][0]].players[playerNo - 1].pos = newPos;
+        const inX=state[clientRooms[id][0]].players[playerNo - 1].x;
+        const inY=state[clientRooms[id][0]].players[playerNo - 1].y;
+        // Looping to mimic moving behavior with delay only at the end
+        for (let p = oldPos + 1; p <= newPos; p++) {
+            let arr = numToCoordinates(p, blockSize,inX,inY);
+            io.sockets.in(clientRooms[id]).emit('updateGoti', arr[0], arr[1], playerNo);
 
-    // Looping to mimic moving behavior with delay only at the end
-    for (let p = oldPos + 1; p <= newPos; p++) {
-        let arr = numToCoordinates(p, blockSize);
-        io.sockets.in(clientRooms[id]).emit('updateGoti', arr[0], arr[1], playerNo);
-
-        // Introduce a delay only for the last iteration of the loop
-        if (p < newPos) {
-            await new Promise(resolve => setTimeout(resolve, 500)); // 500 milliseconds (0.5 seconds) delay
+            // Introduce a delay only for the last iteration of the loop
+            if (p < newPos) {
+                await new Promise(resolve => setTimeout(resolve, 500)); // 500 milliseconds (0.5 seconds) delay
+            }
         }
+        // setting turn of next player
+        let noOfPlay=state[clientRooms[id][0]].noPlayers;
+        let newTurn = (state[clientRooms[id][0]].currentTurn+1)%noOfPlay;
+        newTurn = (newTurn==0)?noOfPlay:newTurn;
+        state[clientRooms[id][0]].currentTurn= newTurn;
+        io.sockets.in(clientRooms[id]).emit('updateTurn',newTurn);
     }
 }
