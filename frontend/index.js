@@ -1,14 +1,24 @@
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
 const boardSize = 10;
-const width = 740;
-const height = 740;
+const width = 700;
+const height = 700;
 canvas.width = width;
 canvas.height = height;
 const blockSize = canvas.width / boardSize;
 const borderW = 1;
-// const separation = []
 import { drawBoard, createDice, randomizeDice } from './utility.js';
+const img = new Image();
+img.crossOrigin = 'anonymous'; // Set this if needed for CORS handling
+
+// Set the onload event handler for the image
+img.onload = function () {
+  // Now that the image is loaded, draw the board with the image
+  drawBoard(ctx, height, width, boardSize, blockSize, borderW, img);
+};
+
+// Set the source of the image after setting the onload event handler
+img.src = 'wormhole.png';
 
 //making client instance
 const socket = io('http://localhost:3000');
@@ -32,7 +42,8 @@ socket.on('updateTurn', (turn) => {
 socket.on('winnerFound',declareWinner)
 
 
-drawBoard(ctx,height,width,boardSize,blockSize,borderW);
+drawBoard(ctx,height,width,boardSize,blockSize,borderW,img);
+
 
 const diceContainer = document.querySelector(".diceContainer");
 const btnRollDice = document.querySelector(".rollDiceBtn");

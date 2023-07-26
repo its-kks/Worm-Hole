@@ -1,5 +1,5 @@
-export function drawBoard(ctx, height, width, boardSize, blockSize, borderW) {
-    ctx.fillStyle = 'white';
+export function drawBoard(ctx, height, width, boardSize, blockSize, borderW, image) {
+    ctx.fillStyle = 'grey';
     ctx.fillRect(0, 0, width, height);
 
     ctx.font = '12px Arial';
@@ -9,25 +9,29 @@ export function drawBoard(ctx, height, width, boardSize, blockSize, borderW) {
     let countLR = 100;
     let countRL = 81;
     let flag = 0;
-
+	let fill=true;
     for (let r = 0; r < boardSize; r++) {
         for (let c = 0; c < boardSize; c++) {
-            ctx.fillStyle = '#ffbb33';
+            ctx.fillStyle = '#0D0D37';
             const x = c * blockSize + borderW;
             const y = r * blockSize + borderW;
             const rectWidth = blockSize - borderW * 2;
             const rectHeight = blockSize - borderW * 2;
 
             ctx.fillRect(x, y, rectWidth, rectHeight);
-            ctx.fillStyle = 'black'; // Set the color for the number
-
+			if(countLR%10==0 && fill ){
+				ctx.drawImage(image,x,y,rectHeight,rectHeight);
+				fill=false;
+			}
             let val;
             if (flag % 2 == 0) {
                 val = countLR--;
             } else {
                 val = countRL++;
             }
-			ctx.fillStyle="red";
+
+			//number color
+            ctx.fillStyle = "white";
             ctx.fillText(val, x + rectWidth - 5, y + 5);
         }
         if (flag % 2 == 0) {
@@ -38,6 +42,7 @@ export function drawBoard(ctx, height, width, boardSize, blockSize, borderW) {
         flag++;
     }
 }
+
  
 //randomise dice roll
 export function createDice(number) {
