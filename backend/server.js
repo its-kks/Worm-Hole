@@ -21,7 +21,7 @@ const clientRooms = {};//store which client belongs to which room
 const state={};//stores gameState of each room
 
 const IN_X=5;
-const IN_Y=680;
+const IN_Y=640;
 function generateState(){
     gameState={
         noPlayers:1,
