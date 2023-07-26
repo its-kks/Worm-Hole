@@ -126,9 +126,11 @@ async function gotiCoordinates(dice, id, blockSize) {
         const clientArr = clientRooms[id];
         const oldPos = state[clientRooms[id][0]].players[playerNo - 1].pos;
         //dice removed
-        const newPos = 7 + state[clientRooms[id][0]].players[playerNo - 1].pos;
-        // Check for winner 
+        const newPos = dice + state[clientRooms[id][0]].players[playerNo - 1].pos;
         // Check for out of bounds
+        if(newPos>100){
+            return;
+        }
         state[clientRooms[id][0]].players[playerNo - 1].pos = newPos;
         const inX=state[clientRooms[id][0]].players[playerNo - 1].x;
         const inY=state[clientRooms[id][0]].players[playerNo - 1].y;
@@ -136,11 +138,16 @@ async function gotiCoordinates(dice, id, blockSize) {
         for (let p = oldPos + 1; p <= newPos; p++) {
             let arr = numToCoordinates(p, blockSize,inX,inY);
             io.sockets.in(clientRooms[id]).emit('updateGoti', arr[0], arr[1], playerNo);
-
+            
             // Introduce a delay only for the last iteration of the loop
             if (p < newPos) {
-                await new Promise(resolve => setTimeout(resolve, 500)); // 500 milliseconds (0.5 seconds) delay
+                await new Promise(resolve => setTimeout(resolve, 300)); // 300 milliseconds (0.3 seconds) delay
             }
+        }
+        // Check for winner 
+        if(newPos==100){
+            io.sockets.in(clientRooms[id]).emit('winnerFound',playerNo,id);
+            return;
         }
         // setting turn of next player
         let noOfPlay=state[clientRooms[id][0]].noPlayers;

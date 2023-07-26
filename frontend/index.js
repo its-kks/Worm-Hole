@@ -29,6 +29,7 @@ socket.on('updateTurn', (turn) => {
     const label = document.querySelector("#turnLabel");
     label.innerHTML = `<b>Turn: Player ${turn}</b>`;
 });
+socket.on('winnerFound',declareWinner)
 
 
 drawBoard(ctx,height,width,boardSize,blockSize,borderW);
@@ -118,3 +119,15 @@ joinBtn.addEventListener('click',()=>{
     const inputCodeField=document.querySelector('#gameCodeInput');
     socket.emit('joinGame',inputCodeField.value);
 })
+
+//declare winner
+function declareWinner(winner,id){
+    if(socket.id==id){
+        document.querySelector('#playerHeading').innerText = `You Won!!!`
+    }
+    else{
+        document.querySelector('#playerHeading').innerText = `Player ${winner} won :)`
+    }
+    btnRollDice.remove();
+    document.querySelector("#turnLabel").remove();
+}
