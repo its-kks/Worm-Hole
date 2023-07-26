@@ -128,18 +128,27 @@ try {
     console.error("Server failed to listen " + e);
 }
 
+function setNextTurn(id){
+    let noOfPlay=state[clientRooms[id][0]].noPlayers;
+    let newTurn = (state[clientRooms[id][0]].currentTurn+1)%noOfPlay;
+    newTurn = (newTurn==0)?noOfPlay:newTurn;
+    state[clientRooms[id][0]].currentTurn= newTurn;
+    io.sockets.in(clientRooms[id]).emit('updateTurn',newTurn);
+}
+
 async function gotiCoordinates(dice, id, blockSize) {
     // Find player no
     const playerNo = clientRooms[id][1];
     if(playerNo===state[clientRooms[id][0]].currentTurn){
         const clientArr = clientRooms[id];
-        let delay=30;//delay to move from one position to another in ms
+        let delay=200;//delay to move from one position to another in ms
         const oldPos = state[clientRooms[id][0]].players[playerNo - 1].pos;
         let newPos = dice + state[clientRooms[id][0]].players[playerNo - 1].pos;
         const from = state[clientRooms[id][0]].from;
         const to = state[clientRooms[id][0]].to;
         // Check for out of bounds
         if(newPos>100){
+            setNextTurn(id);
             return;
         }
         state[clientRooms[id][0]].players[playerNo - 1].pos = newPos;
@@ -169,14 +178,9 @@ async function gotiCoordinates(dice, id, blockSize) {
             let arr = numToCoordinates(newPos, blockSize,inX,inY);
             state[clientRooms[id][0]].players[playerNo - 1].pos = newPos;
             io.sockets.in(clientRooms[id]).emit('updateGoti', arr[0], arr[1], playerNo);
-
             io.sockets.in(clientRooms[id]).emit('regrow',playerNo);
         }
         // setting turn of next player
-        let noOfPlay=state[clientRooms[id][0]].noPlayers;
-        let newTurn = (state[clientRooms[id][0]].currentTurn+1)%noOfPlay;
-        newTurn = (newTurn==0)?noOfPlay:newTurn;
-        state[clientRooms[id][0]].currentTurn= newTurn;
-        io.sockets.in(clientRooms[id]).emit('updateTurn',newTurn);
+        setNextTurn(id);
     }
 }
