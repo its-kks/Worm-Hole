@@ -1,0 +1,69 @@
+body{
+    display: flex;
+    align-items:center;
+    justify-content:space-evenly;
+}
+#board{
+    margin:5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+.canvasContainer {
+    position: relative;
+    width: 740px;
+    height: 740px;
+}
+
+canvas#board {
+    width: 100%;
+    height: 100%;
+}
+
+.overlay {
+    margin:5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.goti{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    position: absolute;
+    transform:translate(5px, 680px);
+    /* display: none; */
+    background-color: blueviolet;
+}
+.control{
+    height: 300px;
+}
+.diceContainer {
+	display: flex;
+}
+
+.dice {
+	width: 200px;
+	height: 200px;
+	position: relative;
+	margin: 5px;
+	border-radius: 20px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.diceDot {
+	--top: 0%;
+	--left: 0%;
+
+	width: 30px;
+	height: 30px;
+	background-color: #000000;
+	border-radius: 50%;
+
+	/* Dot Positioning */
+	position: absolute;
+	top: var(--top);
+	left: var(--left);
+	transform: translateX(calc(var(--left) * -1)) translateY(calc(var(--top) * -1));
+}

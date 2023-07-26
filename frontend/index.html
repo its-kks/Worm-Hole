@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="board.css">
+    <title>WormHole</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Add the Socket.IO library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+</head>
+<body>
+    <div class="canvasContainer">
+        <canvas id="board"></canvas>
+        <div class="overlay">
+            <div class="goti"></div>
+            <div class="goti"></div>
+            <div class="goti"></div>
+            <div class="goti"></div>
+        </div>
+    </div>
+    <div class="control d-flex flex-column align-items-center justify-content-around">
+        <div class="diceContainer"></div>
+        <button type="button" class="rollDiceBtn btn btn-primary btn-lg">Roll</button>
+    </div>
+    <script src="index.js" type="module"></script>
+</body>
+</html>
