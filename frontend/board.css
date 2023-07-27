@@ -32,10 +32,10 @@ body{
 }
 #board{
     margin:4px;
-    box-shadow: 0px 0px 5px darkgray;
-    border: 1px solid darkgray;
-    padding: 2px;
-    border-radius: 8px;
+    border: 5px solid #3d256793;
+    padding: 1px;
+    box-shadow: 0 0 1px white;
+
 }
 hr {
     border-color:2px solid white;
@@ -75,7 +75,6 @@ canvas#board {
     box-shadow:0 0 5px black;
 }
 .control{
-    height: 300px;
     flex-direction: column;
 }
 .diceContainer {
@@ -148,20 +147,68 @@ canvas#board {
       display: block;
     }
 }
-/* @media (max-width:970px){
+@media (max-width:970px) and (min-width:550px){
     .canvasContainer{
-        transform: scale(0.5);
+        transform: scale(0.75);
     }
     .diceContainer{
         transform: scale(0.5);
     }
     #gameScreen{
         flex-direction: column;
-        align-items: start;
+        align-items:center;
         justify-content:start;
     }
     .control{
         flex-direction: row;
+        height: 0px;
     }
-} */
+    body{
+        height: 72vh;
+    }
+}
+@media (max-width:550px) and (min-width:490px){
+    .canvasContainer{
+        transform: scale(0.65);
+    }
+    .diceContainer{
+        transform: scale(0.5);
+    }
+    #gameScreen{
+        flex-direction: column;
+        align-items:center;
+        justify-content:start;
+    }
+    .control{
+        flex-direction: row;
+        height: 0px;
+    }
+    body{
+        height: 72vh;
+    }
+}
+@media (max-width:490px) and (min-width:200px){
+    .canvasContainer{
+        transform: scale(0.54);
+        margin-top: 100px;
+
+    }
+    .diceContainer{
+        transform: scale(0.4);
+    }
+    #gameScreen{
+        flex-direction: column;
+        align-items:center;
+        justify-content:start
+    }
+    .control{
+        flex-direction: row;
+        height: 0px;
+        transform: scale(0.7);
+        margin-bottom: 200px;
+    }
+    body{
+        height: 72vh;
+    }
+}
   

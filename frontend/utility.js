@@ -13,40 +13,44 @@ const map=[
 
 export function drawBoard(ctx, height, width, boardSize, blockSize, borderW, image, warArr) {
 	console.log(warArr);
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#3d2567';
     ctx.fillRect(0, 0, width, height);
 
-    ctx.font = '12px Arial';
+    ctx.font = 'bold italic 27px Arial';;
     ctx.textAlign = 'right';
     ctx.textBaseline = 'top';
 
     let countLR = 100;
     let countRL = 81;
     let flag = 0;
+	let toggleColor = 0;
     for (let r = 0; r < boardSize; r++) {
         for (let c = 0; c < boardSize; c++) {
-            ctx.fillStyle = '#0D0D37';
+			if(toggleColor++%2==0)
+            	ctx.fillStyle = '#2e125e';
+			else
+				ctx.fillStyle = '#1f0e3d';
             const x = c * blockSize + borderW;
             const y = r * blockSize + borderW;
             const rectWidth = blockSize - borderW * 2;
             const rectHeight = blockSize - borderW * 2;
 
             ctx.fillRect(x, y, rectWidth, rectHeight);
+			let val;
+			if (flag % 2 == 0) {
+				val = countLR--;
+			} else {
+				val = countRL++;
+			}
+
+			//number color
+			ctx.fillStyle = "#ffffff36";
+			ctx.fillText(val, x + rectWidth - 5, y + 5);
 			//adding wormhole
 			let mapVal = map[r][c];
 			if(warArr.includes(mapVal)){
 				ctx.drawImage(image,x,y,rectHeight,rectHeight);
 			}
-            let val;
-            if (flag % 2 == 0) {
-                val = countLR--;
-            } else {
-                val = countRL++;
-            }
-
-			//number color
-            ctx.fillStyle = "white";
-            ctx.fillText(val, x + rectWidth - 5, y + 5);
         }
         if (flag % 2 == 0) {
             countLR -= 10;
@@ -54,6 +58,7 @@ export function drawBoard(ctx, height, width, boardSize, blockSize, borderW, ima
             countRL = countLR - 19;
         }
         flag++;
+		toggleColor++;
     }
 }
 

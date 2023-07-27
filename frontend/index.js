@@ -6,7 +6,7 @@ const height = 700;
 canvas.width = width;
 canvas.height = height;
 const blockSize = canvas.width / boardSize;
-const borderW = 1;
+const borderW = 0;
 import { drawBoard, createDice, randomizeDice } from './utility.js';
 
 //making client instance
