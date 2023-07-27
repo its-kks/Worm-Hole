@@ -57,13 +57,13 @@ randomizeDice(diceContainer);
 btnRollDice.addEventListener("click", () => {
     if(gameStarted && currTurn==playerNo){
         let diceValue = -1;
+        currTurn = -1;//preventing multiple clicks
 	    const interval = setInterval(() => {
 	    	diceValue = randomizeDice(diceContainer);
 	    }, 50);
 	    setTimeout(() => {clearInterval(interval)
             //sending data to server
             socket.emit('diceRolled',diceValue,socket.id,blockSize);
-            currTurn = -1;//preventing multiple clicks
             console.log("Returning Dice Value");//actually here we are passing parameters of the function
         console.log(diceValue)}, 1000);
     }
