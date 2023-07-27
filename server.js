@@ -117,7 +117,7 @@ io.on('connection',(socket)=>{
     }
 })
 
-const port = 3000;
+const port =  process.env.PORT || 3000;
 try {
     http.listen(port, () => {
         console.log("listening on localhost:" + port);
