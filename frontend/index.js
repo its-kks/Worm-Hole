@@ -7,15 +7,18 @@ canvas.width = width;
 canvas.height = height;
 const blockSize = canvas.width / boardSize;
 const borderW = 0;
+let currTurn = 1;
+let playerNo = 1;
 import { drawBoard, createDice, randomizeDice } from './utility.js';
 
 //making client instance
-const socket = io('http://localhost:3000');
+const socket = io('https://worm-hole-production.up.railway.app/');
 socket.on('updateGoti',moveGoti);
 socket.on('addGameCodeAndGenerateBoard',generateBackground);
 socket.on('setGoti',setGoti);
 socket.on('addPlayerHeading',(no)=>{
     document.querySelector('#playerHeading').innerText = `Player ${no}`;
+    playerNo = no;
 })
 socket.on('gameIsFull',()=>{
     alert("Sorry this game has began!!!")
@@ -27,6 +30,7 @@ socket.on('removeStartBtn',removeStart)
 socket.on('updateTurn', (turn) => {
     const label = document.querySelector("#turnLabel");
     label.innerHTML = `<b>Turn: Player ${turn}</b>`;
+    currTurn = turn;
 });
 socket.on('winnerFound',declareWinner)
 socket.on('makeSmall',(n)=>{
@@ -51,7 +55,7 @@ randomizeDice(diceContainer);
 
 
 btnRollDice.addEventListener("click", () => {
-    if(gameStarted){
+    if(gameStarted && currTurn==playerNo){
         let diceValue = -1;
 	    const interval = setInterval(() => {
 	    	diceValue = randomizeDice(diceContainer);
@@ -59,6 +63,7 @@ btnRollDice.addEventListener("click", () => {
 	    setTimeout(() => {clearInterval(interval)
             //sending data to server
             socket.emit('diceRolled',diceValue,socket.id,blockSize);
+            currTurn = -1;//preventing multiple clicks
             console.log("Returning Dice Value");//actually here we are passing parameters of the function
         console.log(diceValue)}, 1000);
     }
