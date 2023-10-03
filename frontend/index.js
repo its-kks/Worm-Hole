@@ -12,7 +12,8 @@ let playerNo = 1;
 import { drawBoard, createDice, randomizeDice } from './utility.js';
 
 //making client instance
-const socket = io('https://worm-hole-production.up.railway.app/');
+// const socket = io('https://worm-hole-production.up.railway.app/');
+const socket = io('https://wormhole-ysdg.onrender.com');
 socket.on('updateGoti',moveGoti);
 socket.on('addGameCodeAndGenerateBoard',generateBackground);
 socket.on('setGoti',setGoti);
