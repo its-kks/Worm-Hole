@@ -10,7 +10,11 @@ Welcome to this thrilling adventure inspired by the classic Snake and Ladders ga
 4. Encounter wormholes 🌀 along the way! Enter from one end and magically exit from another, or maybe even the same! Who knows where you'll end up? 😮
 5. The game is loaded with surprises and unpredictable turns. Reach the final destination to claim victory! 🏆
 
-💻 **Tech Stack**:
+# Live Gameplay:
+
+[LiveGameplay.webm](https://github.com/its-kks/Worm-Hole/assets/99683544/f45acf39-3865-4d3b-a46c-af8d673535b3)
+
+# 💻 **Tech Stack**:
 Embrace the magic of modern technology with our Tech Stack:
 - HTML 🌐: For the foundation of our gaming world.
 - CSS 🎨: To add beauty and charm to the game's visuals.
